@@ -1,0 +1,15 @@
+/Users/macbook/Documents/UBA/TakeHomeProject/backend/BlogPlatform.Infrastructure/bin/Debug/net9.0/BlogPlatform.Infrastructure.deps.json
+/Users/macbook/Documents/UBA/TakeHomeProject/backend/BlogPlatform.Infrastructure/bin/Debug/net9.0/BlogPlatform.Infrastructure.dll
+/Users/macbook/Documents/UBA/TakeHomeProject/backend/BlogPlatform.Infrastructure/bin/Debug/net9.0/BlogPlatform.Infrastructure.pdb
+/Users/macbook/Documents/UBA/TakeHomeProject/backend/BlogPlatform.Infrastructure/bin/Debug/net9.0/BlogPlatform.Domain.dll
+/Users/macbook/Documents/UBA/TakeHomeProject/backend/BlogPlatform.Infrastructure/bin/Debug/net9.0/BlogPlatform.Domain.pdb
+/Users/macbook/Documents/UBA/TakeHomeProject/backend/BlogPlatform.Infrastructure/obj/Debug/net9.0/BlogPlatform.Infrastructure.csproj.AssemblyReference.cache
+/Users/macbook/Documents/UBA/TakeHomeProject/backend/BlogPlatform.Infrastructure/obj/Debug/net9.0/BlogPlatform.Infrastructure.GeneratedMSBuildEditorConfig.editorconfig
+/Users/macbook/Documents/UBA/TakeHomeProject/backend/BlogPlatform.Infrastructure/obj/Debug/net9.0/BlogPlatform.Infrastructure.AssemblyInfoInputs.cache
+/Users/macbook/Documents/UBA/TakeHomeProject/backend/BlogPlatform.Infrastructure/obj/Debug/net9.0/BlogPlatform.Infrastructure.AssemblyInfo.cs
+/Users/macbook/Documents/UBA/TakeHomeProject/backend/BlogPlatform.Infrastructure/obj/Debug/net9.0/BlogPlatform.Infrastructure.csproj.CoreCompileInputs.cache
+/Users/macbook/Documents/UBA/TakeHomeProject/backend/BlogPlatform.Infrastructure/obj/Debug/net9.0/BlogPlat.7D6B46B3.Up2Date
+/Users/macbook/Documents/UBA/TakeHomeProject/backend/BlogPlatform.Infrastructure/obj/Debug/net9.0/BlogPlatform.Infrastructure.dll
+/Users/macbook/Documents/UBA/TakeHomeProject/backend/BlogPlatform.Infrastructure/obj/Debug/net9.0/refint/BlogPlatform.Infrastructure.dll
+/Users/macbook/Documents/UBA/TakeHomeProject/backend/BlogPlatform.Infrastructure/obj/Debug/net9.0/BlogPlatform.Infrastructure.pdb
+/Users/macbook/Documents/UBA/TakeHomeProject/backend/BlogPlatform.Infrastructure/obj/Debug/net9.0/ref/BlogPlatform.Infrastructure.dll

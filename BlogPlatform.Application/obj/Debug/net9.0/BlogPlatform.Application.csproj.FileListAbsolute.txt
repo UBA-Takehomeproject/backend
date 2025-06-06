@@ -1,0 +1,15 @@
+/Users/macbook/Documents/UBA/TakeHomeProject/backend/BlogPlatform.Application/bin/Debug/net9.0/BlogPlatform.Application.deps.json
+/Users/macbook/Documents/UBA/TakeHomeProject/backend/BlogPlatform.Application/bin/Debug/net9.0/BlogPlatform.Application.dll
+/Users/macbook/Documents/UBA/TakeHomeProject/backend/BlogPlatform.Application/bin/Debug/net9.0/BlogPlatform.Application.pdb
+/Users/macbook/Documents/UBA/TakeHomeProject/backend/BlogPlatform.Application/bin/Debug/net9.0/BlogPlatform.Domain.dll
+/Users/macbook/Documents/UBA/TakeHomeProject/backend/BlogPlatform.Application/bin/Debug/net9.0/BlogPlatform.Domain.pdb
+/Users/macbook/Documents/UBA/TakeHomeProject/backend/BlogPlatform.Application/obj/Debug/net9.0/BlogPlatform.Application.csproj.AssemblyReference.cache
+/Users/macbook/Documents/UBA/TakeHomeProject/backend/BlogPlatform.Application/obj/Debug/net9.0/BlogPlatform.Application.GeneratedMSBuildEditorConfig.editorconfig
+/Users/macbook/Documents/UBA/TakeHomeProject/backend/BlogPlatform.Application/obj/Debug/net9.0/BlogPlatform.Application.AssemblyInfoInputs.cache
+/Users/macbook/Documents/UBA/TakeHomeProject/backend/BlogPlatform.Application/obj/Debug/net9.0/BlogPlatform.Application.AssemblyInfo.cs
+/Users/macbook/Documents/UBA/TakeHomeProject/backend/BlogPlatform.Application/obj/Debug/net9.0/BlogPlatform.Application.csproj.CoreCompileInputs.cache
+/Users/macbook/Documents/UBA/TakeHomeProject/backend/BlogPlatform.Application/obj/Debug/net9.0/BlogPlat.F02B26B9.Up2Date
+/Users/macbook/Documents/UBA/TakeHomeProject/backend/BlogPlatform.Application/obj/Debug/net9.0/BlogPlatform.Application.dll
+/Users/macbook/Documents/UBA/TakeHomeProject/backend/BlogPlatform.Application/obj/Debug/net9.0/refint/BlogPlatform.Application.dll
+/Users/macbook/Documents/UBA/TakeHomeProject/backend/BlogPlatform.Application/obj/Debug/net9.0/BlogPlatform.Application.pdb
+/Users/macbook/Documents/UBA/TakeHomeProject/backend/BlogPlatform.Application/obj/Debug/net9.0/ref/BlogPlatform.Application.dll
