@@ -16,6 +16,7 @@ namespace BlogPlatform.Application.Extentions
                 lName = author.LastName,
                 otherName = author.OtherName,
                 bio = author.Bio,
+                
                 photoURL = author.PhotoURL,
                 createdAt = (DateTime)author.CreatedAt,
                 updatedAt = (DateTime)author.UpdatedAt
@@ -31,7 +32,9 @@ namespace BlogPlatform.Application.Extentions
                 FirstName = authorDto.fName,
                 LastName = authorDto.lName,
                 OtherName = authorDto.otherName,
-                Bio = authorDto.bio,
+                Bio = authorDto.bio, 
+                Email = authorDto.email, // Assuming email is part of AuthorDto
+                PhoneNumber = authorDto.phoneNumber, // Assuming phoneNumber is part of AuthorDto
                 PhotoURL = authorDto.photoURL,
                 CreatedAt = authorDto.createdAt,
                 UpdatedAt = authorDto.updatedAt

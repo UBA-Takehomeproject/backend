@@ -9,6 +9,7 @@ namespace BlogPlatform.Infrastructure.Persistence
         public DbSet<Blog> Blogs { get; set; }
         public DbSet<Author> Authors { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<RefreshToken> RefreshTokens { get; set; }
 
         public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
@@ -20,19 +21,19 @@ namespace BlogPlatform.Infrastructure.Persistence
             .HasOne(b => b.AuthorsInfo)
             .WithMany(a => a.Blogs)
             .HasForeignKey(b => b.AuthorsInfoObjectId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<BlogPost>()
             .HasOne(bp => bp.AuthorsInfo)
             .WithMany(a => a.BlogPosts)
             .HasForeignKey(bp => bp.AuthorsInfoObjectId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .OnDelete(DeleteBehavior.NoAction);
 
             modelBuilder.Entity<User>()
             .HasOne(u => u.AuthorsInfo)
-            .WithOne() // No reverse navigation property in Author
-            .HasForeignKey<User>(u => u.ObjectId)
-            .OnDelete(DeleteBehavior.Restrict);
+            .WithOne(a => a.User)
+            .HasForeignKey<Author>(a => a.ObjectId)
+            .OnDelete(DeleteBehavior.Cascade); // Optional: delete author when user is deleted
 
         }
     }

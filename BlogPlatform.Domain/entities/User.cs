@@ -11,12 +11,11 @@ namespace BlogPlatform.Domain.Entities
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public string Email { get; set; }
-    public string PhotoURL { get; set; }
+    public string? PhotoURL { get; set; }
 
     // Foreign key to Author
     public Guid? AuthorsInfoObjectId { get; set; }
 
-    [ForeignKey("AuthorsInfoObjectId")]
     public Author? AuthorsInfo { get; set; }
     public Role role { get; set; }
     public string PasswordHash { get; set; }

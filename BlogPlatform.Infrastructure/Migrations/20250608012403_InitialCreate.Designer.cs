@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlogPlatform.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250607234947_addedForeignKey")]
-    partial class addedForeignKey
+    [Migration("20250608012403_InitialCreate")]
+    partial class InitialCreate
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -76,6 +76,10 @@ namespace BlogPlatform.Infrastructure.Migrations
             modelBuilder.Entity("BlogPlatform.Domain.Entities.Blog", b =>
                 {
                     b.Property<Guid>("ObjectId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AuthorsInfoObjectId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CoverImage")
@@ -105,12 +109,21 @@ namespace BlogPlatform.Infrastructure.Migrations
 
                     b.HasKey("ObjectId");
 
+                    b.HasIndex("AuthorsInfoObjectId");
+
                     b.ToTable("Blogs");
                 });
 
             modelBuilder.Entity("BlogPlatform.Domain.Entities.BlogPost", b =>
                 {
                     b.Property<Guid>("ObjectId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AuthorsInfoObjectId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BlogObjectId")
                         .HasColumnType("uniqueidentifier");
 
                     b.PrimitiveCollection<string>("Category")
@@ -147,12 +160,19 @@ namespace BlogPlatform.Infrastructure.Migrations
 
                     b.HasKey("ObjectId");
 
+                    b.HasIndex("AuthorsInfoObjectId");
+
+                    b.HasIndex("BlogObjectId");
+
                     b.ToTable("BlogPosts");
                 });
 
             modelBuilder.Entity("BlogPlatform.Domain.Entities.User", b =>
                 {
                     b.Property<Guid>("ObjectId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid?>("AuthorsInfoObjectId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime?>("CreatedAt")
@@ -196,8 +216,8 @@ namespace BlogPlatform.Infrastructure.Migrations
                 {
                     b.HasOne("BlogPlatform.Domain.Entities.Author", "AuthorsInfo")
                         .WithMany("Blogs")
-                        .HasForeignKey("ObjectId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasForeignKey("AuthorsInfoObjectId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("AuthorsInfo");
@@ -207,13 +227,13 @@ namespace BlogPlatform.Infrastructure.Migrations
                 {
                     b.HasOne("BlogPlatform.Domain.Entities.Author", "AuthorsInfo")
                         .WithMany("BlogPosts")
-                        .HasForeignKey("ObjectId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .HasForeignKey("AuthorsInfoObjectId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("BlogPlatform.Domain.Entities.Blog", "Blog")
                         .WithMany()
-                        .HasForeignKey("ObjectId")
+                        .HasForeignKey("BlogObjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -227,7 +247,7 @@ namespace BlogPlatform.Infrastructure.Migrations
                     b.HasOne("BlogPlatform.Domain.Entities.Author", "AuthorsInfo")
                         .WithOne()
                         .HasForeignKey("BlogPlatform.Domain.Entities.User", "ObjectId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("AuthorsInfo");

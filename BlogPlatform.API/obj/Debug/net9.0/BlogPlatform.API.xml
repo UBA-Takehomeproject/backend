@@ -4,5 +4,15 @@
         <name>BlogPlatform.API</name>
     </assembly>
     <members>
+        <member name="M:BlogPlatform.API.Controllers.AuthController.RefreshToken">
+            <summary>
+            Refreshes the JWT access and refresh tokens using the provided refresh token from cookie or Authorization header.
+            </summary>
+        </member>
+        <member name="M:BlogPlatform.API.Controllers.AuthController.Logout">
+            <summary>
+            Logs out the current user by invalidating the refresh token and clearing authentication cookies.
+            </summary>
+        </member>
     </members>
 </doc>

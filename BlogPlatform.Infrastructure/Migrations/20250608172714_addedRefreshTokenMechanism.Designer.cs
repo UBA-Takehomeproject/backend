@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlogPlatform.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250608004222_testing1")]
-    partial class testing1
+    [Migration("20250608172714_addedRefreshTokenMechanism")]
+    partial class addedRefreshTokenMechanism
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,7 +28,6 @@ namespace BlogPlatform.Infrastructure.Migrations
             modelBuilder.Entity("BlogPlatform.Domain.Entities.Author", b =>
                 {
                     b.Property<Guid>("ObjectId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Bio")
@@ -170,6 +169,7 @@ namespace BlogPlatform.Infrastructure.Migrations
             modelBuilder.Entity("BlogPlatform.Domain.Entities.User", b =>
                 {
                     b.Property<Guid>("ObjectId")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<Guid?>("AuthorsInfoObjectId")
@@ -198,7 +198,6 @@ namespace BlogPlatform.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhotoURL")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("UpdatedAt")
@@ -212,12 +211,23 @@ namespace BlogPlatform.Infrastructure.Migrations
                     b.ToTable("Users");
                 });
 
+            modelBuilder.Entity("BlogPlatform.Domain.Entities.Author", b =>
+                {
+                    b.HasOne("BlogPlatform.Domain.Entities.User", "User")
+                        .WithOne("AuthorsInfo")
+                        .HasForeignKey("BlogPlatform.Domain.Entities.Author", "ObjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("BlogPlatform.Domain.Entities.Blog", b =>
                 {
                     b.HasOne("BlogPlatform.Domain.Entities.Author", "AuthorsInfo")
                         .WithMany("Blogs")
                         .HasForeignKey("AuthorsInfoObjectId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("AuthorsInfo");
@@ -228,11 +238,11 @@ namespace BlogPlatform.Infrastructure.Migrations
                     b.HasOne("BlogPlatform.Domain.Entities.Author", "AuthorsInfo")
                         .WithMany("BlogPosts")
                         .HasForeignKey("AuthorsInfoObjectId")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("BlogPlatform.Domain.Entities.Blog", "Blog")
-                        .WithMany()
+                        .WithMany("BlogPosts")
                         .HasForeignKey("BlogObjectId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -242,22 +252,21 @@ namespace BlogPlatform.Infrastructure.Migrations
                     b.Navigation("Blog");
                 });
 
-            modelBuilder.Entity("BlogPlatform.Domain.Entities.User", b =>
-                {
-                    b.HasOne("BlogPlatform.Domain.Entities.Author", "AuthorsInfo")
-                        .WithOne()
-                        .HasForeignKey("BlogPlatform.Domain.Entities.User", "ObjectId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("AuthorsInfo");
-                });
-
             modelBuilder.Entity("BlogPlatform.Domain.Entities.Author", b =>
                 {
                     b.Navigation("BlogPosts");
 
                     b.Navigation("Blogs");
+                });
+
+            modelBuilder.Entity("BlogPlatform.Domain.Entities.Blog", b =>
+                {
+                    b.Navigation("BlogPosts");
+                });
+
+            modelBuilder.Entity("BlogPlatform.Domain.Entities.User", b =>
+                {
+                    b.Navigation("AuthorsInfo");
                 });
 #pragma warning restore 612, 618
         }

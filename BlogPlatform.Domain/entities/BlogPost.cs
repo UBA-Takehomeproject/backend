@@ -15,17 +15,16 @@ namespace BlogPlatform.Domain.Entities
 
         // Foreign key to Author
         public Guid AuthorsInfoObjectId { get; set; }
-
-        [ForeignKey("AuthorsInfoObjectId")]
-
-        public Author AuthorsInfo { get; set; }
+        public Author? AuthorsInfo { get; set; }
         public string CoverImage { get; set; }
         public string Href { get; set; }
 
         // Foreign key to Author
         public Guid BlogObjectId { get; set; }
 
-        [ForeignKey("BlogObjectId")]
+        public string Description { get; set; }
+
+        // [ForeignKey("BlogObjectId")]
         public Blog Blog { get; set; }
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }

@@ -24,7 +24,7 @@ namespace BlogPlatform.Infrastructure.Services
 
         public async Task<AuthResultDto> RegisterAsync(string firstName, string lastName, string password, string email)
         {
-            var existingUser = (await _unitOfWork.Users.FindAsync(u => u.Email == email)).FirstOrDefault();
+            var existingUser = (await _unitOfWork.Users.FindAsync(u => u.Email == email, u => u.AuthorsInfo)).FirstOrDefault();
             if (existingUser != null)
                 throw new Exception("User already exists");
 
@@ -32,6 +32,8 @@ namespace BlogPlatform.Infrastructure.Services
 
             var newUser = new User
             {
+                ObjectId = Guid.NewGuid(),
+                CreatedAt = DateTime.UtcNow,
                 FirstName = firstName,
                 LastName = lastName,
                 Email = email,
@@ -40,10 +42,10 @@ namespace BlogPlatform.Infrastructure.Services
             };
 
             await _unitOfWork.Users.AddAsync(newUser);
-            await _unitOfWork.SaveChangesAsync();
 
             var claims = new[]
             {
+                new Claim(ClaimTypes.NameIdentifier,newUser.ObjectId.ToString()),
                 new Claim(ClaimTypes.Name, $"{newUser.FirstName} {newUser.LastName}"),
                 new Claim(ClaimTypes.Email, newUser.Email),
                 new Claim(ClaimTypes.Role, newUser.role.ToString())
@@ -51,12 +53,22 @@ namespace BlogPlatform.Infrastructure.Services
 
             var token = GenerateAccessToken(claims);
             var refreshToken = GenerateRefreshToken();
+
+            //save refresh token to db
+            await _unitOfWork.RefreshTokens.AddAsync(new RefreshToken
+            {
+                Token = refreshToken,
+                UserId = newUser.ObjectId,
+                Expires = DateTime.UtcNow.AddDays(7)
+            });
+            await _unitOfWork.SaveChangesAsync();
+
             return newUser.ToAuthResultDto(token, refreshToken); ;
         }
 
         public async Task<AuthResultDto> LoginAsync(string email, string password)
         {
-            var user = (await _unitOfWork.Users.FindAsync(u => u.Email == email)).FirstOrDefault();
+            var user = (await _unitOfWork.Users.FindAsync(u => u.Email == email, u => u.AuthorsInfo)).FirstOrDefault();
             var passwordHash = Convert.ToBase64String(Encoding.UTF8.GetBytes(password));
             if (user?.PasswordHash != passwordHash)
             {
@@ -65,12 +77,24 @@ namespace BlogPlatform.Infrastructure.Services
 
             var claims = new[]
             {
+                new Claim(ClaimTypes.NameIdentifier,user.ObjectId.ToString()),
                 new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"),
                 new Claim(ClaimTypes.Email, user.Email),
                 new Claim(ClaimTypes.Role, user.role.ToString())
             };
             var token = GenerateAccessToken(claims);
             var refreshToken = GenerateRefreshToken();
+
+            //save refresh token to db
+            await _unitOfWork.RefreshTokens.AddAsync(new RefreshToken
+            {
+                Token = refreshToken,
+                UserId = user.ObjectId,
+                Expires = DateTime.UtcNow.AddDays(7)
+            });
+
+            await _unitOfWork.SaveChangesAsync();
+
             return user.ToAuthResultDto(
                 token,
                 refreshToken
@@ -95,6 +119,58 @@ namespace BlogPlatform.Infrastructure.Services
         public string GenerateRefreshToken()
         {
             return Convert.ToBase64String(Guid.NewGuid().ToByteArray());
+        }
+
+        public async Task<AuthResultDto> RefreshAsync(string refreshToken)
+        {
+            var storedToken = (await _unitOfWork.RefreshTokens.FindAsync(rt => rt.Token == refreshToken)).FirstOrDefault();
+
+            if (storedToken == null || !storedToken.IsActive)
+                return new AuthResultDto { success = false, errors = new[] { "Invalid refresh token." } };
+
+            var user = await _unitOfWork.Users.GetByIdAsync(storedToken.UserId);
+            var claims = new[]
+            {
+               new Claim(ClaimTypes.NameIdentifier,user.ObjectId.ToString()),
+               new Claim(ClaimTypes.Name, $"{user.FirstName} {user.LastName}"),
+               new Claim(ClaimTypes.Email, user.Email),
+               new Claim(ClaimTypes.Role, user.role.ToString())
+            };
+
+            var newAccessToken = GenerateAccessToken(claims);
+            var newRefreshToken = GenerateRefreshToken();
+
+            storedToken.Revoked = DateTime.UtcNow;
+            await _unitOfWork.RefreshTokens.AddAsync(new RefreshToken
+            {
+                Token = newRefreshToken,
+                UserId = user.ObjectId,
+                Expires = DateTime.UtcNow.AddDays(7)
+            });
+
+            await _unitOfWork.SaveChangesAsync();
+
+            return user.ToAuthResultDto(newAccessToken, newRefreshToken);
+        }
+
+        public async Task LogoutAsync(string refreshToken)
+        {
+            var storedToken = (await _unitOfWork.RefreshTokens.FindAsync(rt => rt.Token == refreshToken)).FirstOrDefault();
+
+            if (storedToken != null && storedToken.IsActive)
+            {
+                storedToken.Revoked = DateTime.UtcNow;
+                await _unitOfWork.SaveChangesAsync();
+            }
+        }
+
+        public string GetUserIdFromToken(string accessToken)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadJwtToken(accessToken);
+
+            var userIdClaim = jwtToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier || c.Type == "sub" || c.Type == "id");
+            return userIdClaim?.Value ?? throw new Exception("User ID not found in token");
         }
     }
 }

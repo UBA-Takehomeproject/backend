@@ -1,10 +1,10 @@
-# BlogPlatform.API 🧅
+# BlogPlatform.API 
 
 A clean and modular ASP.NET Core Web API built using **Onion Architecture** principles, integrated with **Entity Framework Core**, **Swagger**, and ready for collaborative development.
 
 ---
 
-## 🧱 Architecture Overview
+##  Architecture Overview
 
 This project uses a layered Onion Architecture:
 
@@ -17,9 +17,9 @@ This project uses a layered Onion Architecture:
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
-### ✅ Prerequisites
+###  Prerequisites
 
 - [.NET SDK 9](https://dotnet.microsoft.com/en-us/download/dotnet/9.0)
 - SQL Server (local or remote)
@@ -27,7 +27,7 @@ This project uses a layered Onion Architecture:
 
 ---
 
-### 📦 Setup Instructions
+###  Setup Instructions
 
 1. **Clone the repository:**
 
@@ -58,19 +58,19 @@ Edit `BlogPlatform.API/appsettings.json`:
 
 > Run these from the root folder.
 
-### 🔸 Add a Migration
+###  Add a Migration
 
 ```bash
 dotnet ef migrations add YourMigrationName --project BlogPlatform.Infrastructure --startup-project BlogPlatform.API
 ```
 
-### 🔸 Update the Database
+###  Update the Database
 
 ```bash
 dotnet ef database update --project BlogPlatform.Infrastructure --startup-project BlogPlatform.API
 ```
 
-### 🔸 Remove Last Migration
+###  Remove Last Migration
 
 ```bash
 dotnet ef migrations remove --project BlogPlatform.Infrastructure --startup-project BlogPlatform.API
@@ -78,7 +78,7 @@ dotnet ef migrations remove --project BlogPlatform.Infrastructure --startup-proj
 
 ---
 
-## 🧪 Run the API
+##  Run the API
 
 ```bash
 dotnet run --project BlogPlatform.API
@@ -92,7 +92,7 @@ https://localhost:5001/swagger
 
 ---
 
-## 💡 Developer Tips
+##  Developer Tips
 
 - Use `./ef-migrate.sh` (if available) to automate migrations.
 - Use `launch.json` in VS Code for debugging.
@@ -100,7 +100,7 @@ https://localhost:5001/swagger
 
 ---
 
-## 📂 Folder Structure Summary
+##  Folder Structure Summary
 
 ```
 /BlogPlatform.API           → Entry point (Controllers, Swagger, Program.cs)
@@ -111,12 +111,12 @@ https://localhost:5001/swagger
 
 ---
 
-## 📜 License
+##  License
 
 MIT License — free to use and extend.
 
 ---
 
-## 🙋‍♀️ Contributing
+##  Contributing
 
 Pull requests are welcome! Please follow the code style used in the repo and update documentation as needed.

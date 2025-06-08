@@ -16,6 +16,8 @@ namespace BlogPlatform.Application.Extentions
                 title = blogPost.Title,
                 content = blogPost.Content,
                 authorsInfo = blogPost.AuthorsInfo?.ToDto(),
+                authorsObjectId= blogPost.AuthorsInfo.ObjectId, 
+                description= blogPost.Description,
                 date = blogPost.Date, // Format date as needed
                 blog = blogPost.Blog?.ToDto(),
                 category = blogPost.Category,
@@ -37,6 +39,9 @@ namespace BlogPlatform.Application.Extentions
                 AuthorsInfo = blogDto.authorsInfo?.ToEntity(),
                 CreatedAt = blogDto.createdAt,
                 UpdatedAt = blogDto.updatedAt,
+                Description = blogDto.description,
+                AuthorsInfoObjectId = blogDto.authorsObjectId,
+                BlogObjectId = blogDto.blogObjectId, // Assuming blog is optional
                 CoverImage = blogDto.coverImage,
                 Href = blogDto.href,
                 Category = blogDto.category,

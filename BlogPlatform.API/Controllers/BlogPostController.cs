@@ -24,7 +24,7 @@ namespace BlogPlatform.API.Controllers
         [HttpGet]
         public async Task<IActionResult> GetAllPosts()
         {
-            var posts = await _unitOfWork.BlogPosts.GetAllAsync();
+            var posts = await _unitOfWork.BlogPosts.GetAllAsync(null, b => b.Blog, b => b.AuthorsInfo);
             return Ok(posts.ToDtoList());
         }
 
@@ -32,7 +32,7 @@ namespace BlogPlatform.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetPostById(Guid id)
         {
-            var post = await _unitOfWork.BlogPosts.GetByIdAsync(id.ToString());
+            var post = await _unitOfWork.BlogPosts.GetByIdAsync(id, b => b.Blog, b => b.AuthorsInfo);
             if (post == null)
                 return NotFound();
 
@@ -43,20 +43,22 @@ namespace BlogPlatform.API.Controllers
         [HttpGet("blog/{blogId}")]
         public async Task<IActionResult> GetPostsByBlog(Guid blogId)
         {
-            var post = await _unitOfWork.BlogPosts.GetByIdAsync(blogId.ToString());
+            var post = await _unitOfWork.BlogPosts.GetAllAsync(b => b.BlogObjectId == blogId, b => b.Blog, b => b.AuthorsInfo);
 
 
-            return Ok(post.ToDto());
+            return Ok(post.ToDtoList());
         }
 
         // POST: api/blogpost
         [HttpPost]
-        [Authorize(Roles = "User,Admin")]
+        [Authorize(Roles = "USER,ADMIN")]
         public async Task<IActionResult> CreatePost([FromBody] BlogPostDto post)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
+            if (post.objectId == Guid.Empty)
+                post.objectId = Guid.NewGuid();
             await _unitOfWork.BlogPosts.AddAsync(post.ToEntity());
             await _unitOfWork.SaveChangesAsync();
 
@@ -65,13 +67,13 @@ namespace BlogPlatform.API.Controllers
 
         // PUT: api/blogpost/{id}
         [HttpPut("{id}")]
-        [Authorize(Roles = "User,Admin")]
+        [Authorize(Roles = "USER,ADMIN")]
         public async Task<IActionResult> UpdatePost(Guid id, [FromBody] BlogPostDto post)
         {
             if (id != post.objectId)
                 return BadRequest("Post ID mismatch.");
 
-            var existing = await _unitOfWork.BlogPosts.GetByIdAsync(id.ToString());
+            var existing = await _unitOfWork.BlogPosts.GetByIdAsync(id, b => b.Blog);
             if (existing == null)
                 return NotFound();
 
@@ -88,10 +90,10 @@ namespace BlogPlatform.API.Controllers
 
         // DELETE: api/blogpost/{id}
         [HttpDelete("{id}")]
-        [Authorize(Roles = "User,Admin")]
-        public async Task<IActionResult> DeletePost(Guid  id)
+        [Authorize(Roles = "USER,ADMIN")]
+        public async Task<IActionResult> DeletePost(Guid id)
         {
-            var post = await _unitOfWork.BlogPosts.GetByIdAsync(id.ToString());
+            var post = await _unitOfWork.BlogPosts.GetByIdAsync(id);
             if (post == null)
                 return NotFound();
 

@@ -14,8 +14,8 @@ namespace BlogPlatform.Domain.Entities
         // Foreign key to Author
         public Guid AuthorsInfoObjectId { get; set; }
 
-        [ForeignKey("AuthorsInfoObjectId")]
-        public Author AuthorsInfo { get; set; }
+        public Author? AuthorsInfo { get; set; }
+        public string Description { get; set; }
 
         public string CoverImage { get; set; }
         public string Href { get; set; }
@@ -23,5 +23,7 @@ namespace BlogPlatform.Domain.Entities
         public DateTime? CreatedAt { get; set; }
         public DateTime? UpdatedAt { get; set; }
         public DateTime? DeletedAt { get; set; }
+        public ICollection<BlogPost> BlogPosts { get; set; } = new List<BlogPost>();
+
     }
 }

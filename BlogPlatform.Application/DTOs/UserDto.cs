@@ -10,7 +10,7 @@ namespace BlogPlatform.Application.DTOs
         public string lname { get; set; }
         public string photoURL { get; set; }
         public AuthorDto? authorsInfo { get; set; }
-        public Role role { get; set; }  
+        public string role { get; set; }  
     }
 
 }

@@ -1,78 +1,3 @@
-// using Microsoft.AspNetCore.Mvc;
-// using BlogPlatform.Application.DTOs;
-// using BlogPlatform.Domain.Interfaces;
-// using BlogPlatform.Domain.Entities;
-// using BlogPlatform.Application.Extentions;
-
-// namespace BlogPlatform.API.Controllers
-// {
-//     [ApiController]
-//     [Route("api/authors")]
-
-//     public class AuthorsController : ControllerBase
-//     {
-//         private readonly IRepository<Author> _authorService;
-
-//         public AuthorsController(IRepository<Author> authorService)
-//         {
-//             _authorService = authorService;
-//         }
-
-//         [HttpGet]
-//         public async Task<IActionResult> GetAll()
-//         {
-//             var authors = await _authorService.GetAllAsync();
-//             return Ok(authors.ToDtoList());
-//         }
-
-//         [HttpGet("{id}")]
-//         public async Task<IActionResult> GetById(Guid id)
-//         {
-//             var author = await _authorService.GetByIdAsync(id.ToString());
-//             if (author == null)
-//                 return NotFound();
-
-//             return Ok(author.ToDto());
-//         }
-
-//         [HttpPost]
-//         public async Task<IActionResult> Create([FromBody] AuthorDto request)
-//         {
-//             var entity = request.ToEntity();
-//             await _authorService.AddAsync(entity);
-//             return CreatedAtAction(nameof(GetById), new { id = entity.ObjectId }, entity.ToDto());
-//         }
-
-//         [HttpPut("{id}")]
-//         public async Task<IActionResult> Update(Guid id, [FromBody] AuthorDto request)
-//         {
-//             var author = await _authorService.GetByIdAsync(id.ToString());
-//             if (author == null)
-//                 return NotFound();
-
-//             var entityToUpdate = request.ToEntity();
-//             entityToUpdate.ObjectId = author.ObjectId; // Ensure the ID is preserved
-
-//             _authorService.Update(entityToUpdate);
-
-
-//             return NoContent();
-//         }
-
-//         [HttpDelete("{id}")]
-//         public async Task<IActionResult> Delete(Guid id)
-//         {
-//             var author = await _authorService.GetByIdAsync(id.ToString());
-//             if (author == null)
-//                 return NotFound();
-//             _authorService.Remove(author);
-
-//             return NoContent();
-//         }
-//     }
-// }
-
-
 using Microsoft.AspNetCore.Mvc;
 using BlogPlatform.Application.DTOs;
 using BlogPlatform.Domain.Entities;
@@ -84,7 +9,7 @@ namespace BlogPlatform.API.Controllers
 {
     [ApiController]
     [Route("api/authors")]
-  
+
     public class AuthorsController : ControllerBase
     {
         private readonly IUnitOfWork _unitOfWork;
@@ -104,7 +29,7 @@ namespace BlogPlatform.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetById(Guid id)
         {
-            var author = await _unitOfWork.Authors.GetByIdAsync(id.ToString());
+            var author = await _unitOfWork.Authors.GetByIdAsync(id);
             if (author == null)
                 return NotFound();
 
@@ -114,6 +39,11 @@ namespace BlogPlatform.API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] AuthorDto request)
         {
+
+            // var user = await _unitOfWork.Users.GetByIdAsync(request.objectId.ToString());
+            if (request.objectId == Guid.Empty)
+                request.objectId = Guid.NewGuid();
+
             var entity = request.ToEntity();
             await _unitOfWork.Authors.AddAsync(entity);
             await _unitOfWork.SaveChangesAsync();
@@ -124,10 +54,12 @@ namespace BlogPlatform.API.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> Update(Guid id, [FromBody] AuthorDto request)
         {
-            var author = await _unitOfWork.Authors.GetByIdAsync(id.ToString());
+            var author = await _unitOfWork.Authors.GetByIdAsync(id);
             if (author == null)
                 return NotFound();
-
+            // var user = await _unitOfWork.Users.GetByIdAsync(request.objectId.ToString());
+            // if (user == null)
+            //     return NotFound("User not found");
             var updated = request.ToEntity();
             updated.ObjectId = author.ObjectId;
 
@@ -140,7 +72,7 @@ namespace BlogPlatform.API.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> Delete(Guid id)
         {
-            var author = await _unitOfWork.Authors.GetByIdAsync(id.ToString());
+            var author = await _unitOfWork.Authors.GetByIdAsync(id);
             if (author == null)
                 return NotFound();
 

@@ -18,7 +18,7 @@ namespace BlogPlatform.Application.Extentions
 
                 photoURL = user.PhotoURL,
                 authorsInfo = user.AuthorsInfo.ToDto(), 
-                role = user.role,
+                role = user.role.ToString(),
 
                 // Add other properties as needed
             };

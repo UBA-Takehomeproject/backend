@@ -14,9 +14,12 @@ namespace BlogPlatform.Application.Extensions
             {
                 objectId = (Guid)blog.ObjectId,
                 title = blog.Title,
+
                 authorsInfo = blog.AuthorsInfo?.ToDto(),
+                authorsObjectId=blog.AuthorsInfo.ObjectId,
                 createdAt = (DateTime)blog.CreatedAt,
                 updatedAt = (DateTime)blog.UpdatedAt,
+                description = blog.Description,
                 date = blog.Date,
                 coverImage = blog.CoverImage,
                 href = blog.Href
@@ -35,9 +38,10 @@ namespace BlogPlatform.Application.Extensions
             {
                 ObjectId = blogDto.objectId,
                 Title = blogDto.title,
-                AuthorsInfo = blogDto.authorsInfo?.ToEntity(),
+                AuthorsInfoObjectId = blogDto.authorsObjectId,
                 CreatedAt = blogDto.createdAt,
                 UpdatedAt = blogDto.updatedAt,
+                Description = blogDto.description,
                 Date = blogDto.date,
                 CoverImage = blogDto.coverImage,
                 Href = blogDto.href

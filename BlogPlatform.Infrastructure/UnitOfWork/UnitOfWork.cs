@@ -12,6 +12,7 @@ namespace BlogPlatform.Infrastructure.UnitOfWork
         private IRepository<BlogPost>? _blogPosts;
         private IRepository<Author>? _authors;
         private IRepository<User>? _users;
+        private IRepository<RefreshToken>? _refreshTokens;
 
         public UnitOfWork(AppDbContext context)
         {
@@ -22,6 +23,9 @@ namespace BlogPlatform.Infrastructure.UnitOfWork
         public IRepository<BlogPost> BlogPosts => _blogPosts ??= new Repository<BlogPost>(_context);
         public IRepository<Author> Authors => _authors ??= new Repository<Author>(_context);
         public IRepository<User> Users => _users ??= new Repository<User>(_context);
+
+
+        public IRepository<RefreshToken> RefreshTokens => _refreshTokens ??= new Repository<RefreshToken>(_context);
 
         public async Task<int> SaveChangesAsync() => await _context.SaveChangesAsync();
 

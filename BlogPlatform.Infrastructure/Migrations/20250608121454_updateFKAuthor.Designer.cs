@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BlogPlatform.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250607104835_dbContextFix")]
-    partial class dbContextFix
+    [Migration("20250608121454_updateFKAuthor")]
+    partial class updateFKAuthor
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,14 +28,21 @@ namespace BlogPlatform.Infrastructure.Migrations
             modelBuilder.Entity("BlogPlatform.Domain.Entities.Author", b =>
                 {
                     b.Property<Guid>("ObjectId")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("Bio")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -49,20 +56,16 @@ namespace BlogPlatform.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PhoneNumber")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhotoURL")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("phoneNumber")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("photoURL")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ObjectId");
 
@@ -73,6 +76,9 @@ namespace BlogPlatform.Infrastructure.Migrations
                 {
                     b.Property<Guid>("ObjectId")
                         .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("AuthorsInfoObjectId")
                         .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("CoverImage")
@@ -102,6 +108,8 @@ namespace BlogPlatform.Infrastructure.Migrations
 
                     b.HasKey("ObjectId");
 
+                    b.HasIndex("AuthorsInfoObjectId");
+
                     b.ToTable("Blogs");
                 });
 
@@ -111,7 +119,13 @@ namespace BlogPlatform.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
-                    b.Property<string>("Category")
+                    b.Property<Guid>("AuthorsInfoObjectId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("BlogObjectId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.PrimitiveCollection<string>("Category")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -126,9 +140,8 @@ namespace BlogPlatform.Infrastructure.Migrations
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Date")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<DateTime>("Date")
+                        .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
@@ -146,6 +159,10 @@ namespace BlogPlatform.Infrastructure.Migrations
 
                     b.HasKey("ObjectId");
 
+                    b.HasIndex("AuthorsInfoObjectId");
+
+                    b.HasIndex("BlogObjectId");
+
                     b.ToTable("BlogPosts");
                 });
 
@@ -155,11 +172,18 @@ namespace BlogPlatform.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid?>("AuthorsInfoObjectId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime?>("CreatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("DeletedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
@@ -169,20 +193,75 @@ namespace BlogPlatform.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<string>("PasswordHash")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PhotoURL")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime?>("UpdatedAt")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("photoURL")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("role")
+                        .HasColumnType("int");
 
                     b.HasKey("ObjectId");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("BlogPlatform.Domain.Entities.Author", b =>
+                {
+                    b.HasOne("BlogPlatform.Domain.Entities.User", "User")
+                        .WithOne("AuthorsInfo")
+                        .HasForeignKey("BlogPlatform.Domain.Entities.Author", "ObjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("BlogPlatform.Domain.Entities.Blog", b =>
+                {
+                    b.HasOne("BlogPlatform.Domain.Entities.Author", "AuthorsInfo")
+                        .WithMany("Blogs")
+                        .HasForeignKey("AuthorsInfoObjectId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("AuthorsInfo");
+                });
+
+            modelBuilder.Entity("BlogPlatform.Domain.Entities.BlogPost", b =>
+                {
+                    b.HasOne("BlogPlatform.Domain.Entities.Author", "AuthorsInfo")
+                        .WithMany("BlogPosts")
+                        .HasForeignKey("AuthorsInfoObjectId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("BlogPlatform.Domain.Entities.Blog", "Blog")
+                        .WithMany()
+                        .HasForeignKey("BlogObjectId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AuthorsInfo");
+
+                    b.Navigation("Blog");
+                });
+
+            modelBuilder.Entity("BlogPlatform.Domain.Entities.Author", b =>
+                {
+                    b.Navigation("BlogPosts");
+
+                    b.Navigation("Blogs");
+                });
+
+            modelBuilder.Entity("BlogPlatform.Domain.Entities.User", b =>
+                {
+                    b.Navigation("AuthorsInfo");
                 });
 #pragma warning restore 612, 618
         }

@@ -8,6 +8,7 @@ namespace BlogPlatform.Domain.Interfaces
         IRepository<BlogPost> BlogPosts { get; }
         IRepository<Author> Authors { get; }
         IRepository<User> Users { get; }
+        IRepository<RefreshToken> RefreshTokens { get; }
         Task<int> SaveChangesAsync();
     }
 }

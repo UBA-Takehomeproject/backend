@@ -1,100 +1,3 @@
-// using BlogPlatform.Domain.Interfaces;
-// using BlogPlatform.Infrastructure.Repositories;
-// using BlogPlatform.Infrastructure.UnitOfWork;
-
-// using BlogPlatform.Infrastructure.Persistence;
-// using Microsoft.EntityFrameworkCore;
-
-// using Microsoft.AspNetCore.Authentication.JwtBearer;
-// using Microsoft.IdentityModel.Tokens;
-// using System.Text;
-// using BlogPlatform.Application.Interfaces;
-// using BlogPlatform.Infrastructure.Services;
-// using System.Reflection;
-
-// var builder = WebApplication.CreateBuilder(args);
-
-// //adding infastructure services
-// builder.Services.AddScoped<IUserRepository, UserRepository>();
-// builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
-// builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-
-// builder.Services.AddScoped<IAuthService, AuthService>();
-
-// // Add DbContext
-// builder.Services.AddDbContext<AppDbContext>(options =>
-//     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
-
-// // Add services to the container.
-// // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-// builder.Services.AddOpenApi();
-// //add open API - swagger ui 
-// builder.Services.AddEndpointsApiExplorer();
-// builder.Services.AddSwaggerGen();
-
-// builder.Services.AddSwaggerGen(c =>
-// {
-//     var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-//     c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
-// });
-
-
-// //Authentication and Authorization
-// var jwtKey = builder.Configuration["Jwt:Key"];
-// var jwtIssuer = builder.Configuration["Jwt:Issuer"];
-
-// builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
-//     .AddJwtBearer(options =>
-//     {
-//         options.TokenValidationParameters = new TokenValidationParameters
-//         {
-//             ValidateIssuer = true,
-//             ValidateAudience = false,
-//             ValidateLifetime = true,
-//             ValidateIssuerSigningKey = true,
-//             ValidIssuer = jwtIssuer,
-//             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
-//         };
-//     });
-
-// builder.Services.AddAuthorization();
-
-
-// var app = builder.Build();
-
-// // Configure the HTTP request pipeline.
-// if (app.Environment.IsDevelopment())
-// {
-//     app.MapOpenApi();
-// }
-
-// app.UseHttpsRedirection();
-// //using authentication and authorization
-// app.UseAuthentication();
-// app.UseAuthorization();
-
-//  // Redirect root path to Swagger UI
-// app.MapGet("/", context =>
-// {
-//     context.Response.Redirect("/swagger");
-//     return Task.CompletedTask;
-// });
-
-//  app.MapControllers();
-// //using swagger
-// if (app.Environment.IsDevelopment())
-// {
-//     app.UseSwagger();
-//     app.UseSwaggerUI();
-// }
-
-
-// app.Run();
-
- 
-
-
-
 using System.Reflection;
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -106,29 +9,24 @@ using BlogPlatform.Infrastructure.Persistence;
 using BlogPlatform.Infrastructure.Repositories;
 using BlogPlatform.Infrastructure.Services;
 using BlogPlatform.Infrastructure.UnitOfWork;
+using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
+//  Infrastructure
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
-// DbContext
+//  DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Swagger + XML Comments
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(c =>
-{
-    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-    c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
-});
-
-// Auth config
+//  JWT Config
 var jwtKey = builder.Configuration["Jwt:Key"];
 var jwtIssuer = builder.Configuration["Jwt:Issuer"];
 
+//  Authentication - Accept both Cookie and Bearer token
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -141,35 +39,103 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidIssuer = jwtIssuer,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey))
         };
+
+        //  Accept token from either header or cookie
+        options.Events = new JwtBearerEvents
+        {
+            OnMessageReceived = context =>
+            {
+                // 1. Check Authorization: Bearer header
+                var authHeader = context.Request.Headers["Authorization"].FirstOrDefault();
+                if (!string.IsNullOrWhiteSpace(authHeader) && authHeader.StartsWith("Bearer "))
+                {
+                    context.Token = authHeader.Substring("Bearer ".Length).Trim();
+                }
+                else
+                {
+                    // 2. Fallback: Check HttpOnly cookie
+                    var cookieToken = context.Request.Cookies["access_token"];
+                    if (!string.IsNullOrWhiteSpace(cookieToken))
+                    {
+                        context.Token = cookieToken;
+                    }
+                }
+
+                return Task.CompletedTask;
+            }
+        };
     });
 
 builder.Services.AddAuthorization();
 
-// Controllers
-builder.Services.AddControllers();
 
+var allowedOrigins = builder.Configuration.GetSection("AllowedOrigins").Get<string[]>();
+//  CORS - Required for HttpOnly cookie auth
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowFrontend", builder =>
+    {
+        builder.WithOrigins(allowedOrigins) // Replace with your actual frontend URL
+               .AllowAnyHeader()
+               .AllowAnyMethod()
+               .AllowCredentials(); // Required for sending cookies
+    });
+});
+
+
+//  Swagger
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(c =>
+{
+    c.SwaggerDoc("v1", new OpenApiInfo { Title = "BlogPlatformAPI", Version = "v1" });
+
+    var xmlFilename = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+    c.IncludeXmlComments(Path.Combine(AppContext.BaseDirectory, xmlFilename));
+
+    // Swagger Bearer support
+    c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey,
+        Scheme = "Bearer",
+        In = ParameterLocation.Header,
+        Description = "Enter 'Bearer {your token}'"
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Bearer" }
+            },
+            new string[] {}
+        }
+    });
+});
+
+builder.Services.AddControllers();
+//  Middleware
 var app = builder.Build();
 
-// Middleware order matters
 app.UseHttpsRedirection();
-app.UseAuthentication();
+
+app.UseCors("AllowFrontend");     //  CORS must be before auth
+app.UseAuthentication();          //  JWT & cookie parsing
 app.UseAuthorization();
 
-// Use Swagger (only in development)
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
-// Redirect root URL to Swagger UI
 app.MapGet("/", context =>
 {
     context.Response.Redirect("/swagger");
     return Task.CompletedTask;
 });
 
-// Map controllers
 app.MapControllers();
 
 app.Run();

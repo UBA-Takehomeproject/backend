@@ -5,7 +5,7 @@
 namespace BlogPlatform.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class dbContextFix : Migration
+    public partial class updateBlogWithListOfBlogPost : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
