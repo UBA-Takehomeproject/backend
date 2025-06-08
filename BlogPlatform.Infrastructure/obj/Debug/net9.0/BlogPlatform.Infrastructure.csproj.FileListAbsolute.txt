@@ -13,3 +13,8 @@
 /Users/macbook/Documents/UBA/TakeHomeProject/backend/BlogPlatform.Infrastructure/obj/Debug/net9.0/refint/BlogPlatform.Infrastructure.dll
 /Users/macbook/Documents/UBA/TakeHomeProject/backend/BlogPlatform.Infrastructure/obj/Debug/net9.0/BlogPlatform.Infrastructure.pdb
 /Users/macbook/Documents/UBA/TakeHomeProject/backend/BlogPlatform.Infrastructure/obj/Debug/net9.0/ref/BlogPlatform.Infrastructure.dll
+/Users/macbook/Documents/UBA/TakeHomeProject/backend/BlogPlatform.Infrastructure/obj/Debug/net9.0/BlogPlatform.Infrastructure.sourcelink.json
+/Users/macbook/Documents/UBA/TakeHomeProject/backend/BlogPlatform.Infrastructure/bin/Debug/net9.0/BlogPlatform.Infrastructure.runtimeconfig.json
+/Users/macbook/Documents/UBA/TakeHomeProject/backend/BlogPlatform.Infrastructure/obj/Debug/net9.0/BlogPlatform.Infrastructure.genruntimeconfig.cache
+/Users/macbook/Documents/UBA/TakeHomeProject/backend/BlogPlatform.Infrastructure/bin/Debug/net9.0/BlogPlatform.Application.dll
+/Users/macbook/Documents/UBA/TakeHomeProject/backend/BlogPlatform.Infrastructure/bin/Debug/net9.0/BlogPlatform.Application.pdb

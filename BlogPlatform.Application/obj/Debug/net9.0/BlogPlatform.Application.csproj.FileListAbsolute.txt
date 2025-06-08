@@ -13,3 +13,4 @@
 /Users/macbook/Documents/UBA/TakeHomeProject/backend/BlogPlatform.Application/obj/Debug/net9.0/refint/BlogPlatform.Application.dll
 /Users/macbook/Documents/UBA/TakeHomeProject/backend/BlogPlatform.Application/obj/Debug/net9.0/BlogPlatform.Application.pdb
 /Users/macbook/Documents/UBA/TakeHomeProject/backend/BlogPlatform.Application/obj/Debug/net9.0/ref/BlogPlatform.Application.dll
+/Users/macbook/Documents/UBA/TakeHomeProject/backend/BlogPlatform.Application/obj/Debug/net9.0/BlogPlatform.Application.sourcelink.json

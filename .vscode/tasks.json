@@ -1,16 +1,31 @@
 {
-    "version": "2.0.0",
-    "tasks": [
-      {
-        "label": "build",
-        "command": "dotnet",
-        "type": "process",
-        "args": [
-          "build",
-          "${workspaceFolder}/BlogPlatform.API"
-        ],
-        "problemMatcher": "$msCompile"
-      }
-    ]
-  }
-  
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "build",
+      "command": "dotnet",
+      "type": "process",
+      "args": ["build", "${workspaceFolder}/BlogPlatform.API"],
+      "problemMatcher": "$msCompile"
+    },
+    {
+      "label": "Update EF Database",
+      "type": "shell",
+      "command": "dotnet ef database update --project BlogPlatform.Infrastructure --startup-project BlogPlatform.API",
+      "problemMatcher": []
+    },
+    {
+      "label": "Remove EF Migration",
+      "type": "shell",
+      "command": "dotnet ef migrations remove --project BlogPlatform.Infrastructure --startup-project BlogPlatform.API",
+      "problemMatcher": []
+    }
+  ],
+  "inputs": [
+    {
+      "id": "migrationName",
+      "type": "promptString",
+      "description": "Enter the name of the migration"
+    }
+  ]
+}

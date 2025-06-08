@@ -1,0 +1,54 @@
+using BlogPlatform.Domain.Entities;
+using BlogPlatform.Application.DTOs;
+using BlogPlatform.Application.Extensions;
+
+namespace BlogPlatform.Application.Extentions
+{
+    public static class BlogPostExtention
+    {
+        public static BlogPostDto ToDto(this BlogPost blogPost)
+        {
+            if (blogPost == null) return null;
+
+            return new BlogPostDto
+            {
+                objectId = (Guid)blogPost.ObjectId,
+                title = blogPost.Title,
+                content = blogPost.Content,
+                authorsInfo = blogPost.AuthorsInfo?.ToDto(),
+                date = blogPost.Date, // Format date as needed
+                blog = blogPost.Blog?.ToDto(),
+                category = blogPost.Category,
+                coverImage = blogPost.CoverImage,
+                href = blogPost.Href,
+                createdAt = (DateTime)blogPost.CreatedAt,
+                updatedAt = (DateTime)blogPost.UpdatedAt
+                // Add other properties as needed
+            };
+        }
+          public static BlogPost ToEntity(this BlogPostDto blogDto)
+        {
+            if (blogDto == null) return null;
+
+            return new BlogPost
+            {
+                ObjectId = blogDto.objectId,
+                Title = blogDto.title,
+                AuthorsInfo = blogDto.authorsInfo?.ToEntity(),
+                CreatedAt = blogDto.createdAt,
+                UpdatedAt = blogDto.updatedAt,
+                CoverImage = blogDto.coverImage,
+                Href = blogDto.href,
+                Category = blogDto.category,
+                Content = blogDto.content,
+                Date =(DateTime) blogDto.date,
+            };
+        }
+        public static List<BlogPostDto> ToDtoList(this IEnumerable<BlogPost> blogPost)
+        {
+            if (blogPost == null) return null;
+            return blogPost.Select(a => a.ToDto()).ToList();
+        }
+
+    }
+}

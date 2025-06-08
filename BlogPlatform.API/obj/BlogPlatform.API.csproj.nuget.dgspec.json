@@ -51,9 +51,23 @@
         "net9.0": {
           "targetAlias": "net9.0",
           "dependencies": {
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[9.0.5, )"
+            },
             "Microsoft.AspNetCore.OpenApi": {
               "target": "Package",
               "version": "[9.0.5, )"
+            },
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.5, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[8.1.4, )"
             }
           },
           "imports": [
@@ -223,6 +237,9 @@
           "net9.0": {
             "targetAlias": "net9.0",
             "projectReferences": {
+              "/Users/macbook/Documents/UBA/TakeHomeProject/backend/BlogPlatform.Application/BlogPlatform.Application.csproj": {
+                "projectPath": "/Users/macbook/Documents/UBA/TakeHomeProject/backend/BlogPlatform.Application/BlogPlatform.Application.csproj"
+              },
               "/Users/macbook/Documents/UBA/TakeHomeProject/backend/BlogPlatform.Domain/BlogPlatform.Domain.csproj": {
                 "projectPath": "/Users/macbook/Documents/UBA/TakeHomeProject/backend/BlogPlatform.Domain/BlogPlatform.Domain.csproj"
               }
@@ -244,6 +261,18 @@
       "frameworks": {
         "net9.0": {
           "targetAlias": "net9.0",
+          "dependencies": {
+            "Microsoft.EntityFrameworkCore.Design": {
+              "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[9.0.5, )"
+            },
+            "Microsoft.EntityFrameworkCore.SqlServer": {
+              "target": "Package",
+              "version": "[9.0.5, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",

@@ -2,12 +2,15 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "Launch BlogPlatform.API",
+      "name": "Run BlogPlatform.API via dotnet run",
       "type": "coreclr",
       "request": "launch",
-      "preLaunchTask": "build",
-      "program": "${workspaceFolder}/BlogPlatform.API/bin/Debug/net8.0/BlogPlatform.API.dll",
-      "args": [],
+      "program": "dotnet",
+      "args": [
+        "run",
+        "--project",
+        "${workspaceFolder}/BlogPlatform.API"
+      ],
       "cwd": "${workspaceFolder}/BlogPlatform.API",
       "stopAtEntry": false,
       "serverReadyAction": {
@@ -16,9 +19,6 @@
       },
       "env": {
         "ASPNETCORE_ENVIRONMENT": "Development"
-      },
-      "sourceFileMap": {
-        "/Views": "${workspaceFolder}/BlogPlatform.API/Views"
       }
     }
   ]
