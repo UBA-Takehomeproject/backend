@@ -10,7 +10,7 @@ namespace BlogPlatform.Application.DTOs
         public AuthorDto? authorsInfo { get; set; }
 
         public string description { get; set; }
-
+        public ICollection<BlogPostDto>? blogPosts { get; set; }
         public Guid authorsObjectId { get; set; }
         public string coverImage { get; set; }
         public string? href { get; set; }

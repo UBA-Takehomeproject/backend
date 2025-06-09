@@ -5,6 +5,7 @@ using BlogPlatform.Domain.Interfaces;
 using BlogPlatform.Infrastructure.UnitOfWork;
 using BlogPlatform.Application.Extensions;
 using BlogPlatform.Application.DTOs;
+using BlogPlatform.Application.Extentions;
 
 namespace BlogPlatform.API.Controllers
 {
@@ -46,11 +47,20 @@ namespace BlogPlatform.API.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetBlogById(Guid id)
         {
-            var blog = await _unitOfWork.Blogs.GetByIdAsync(id, b => b.AuthorsInfo, b => b.BlogPosts);
+            var blog = await _unitOfWork.Blogs.GetByIdAsync(id, b => b.AuthorsInfo);
+            var blogPosts = await _unitOfWork.BlogPosts.GetAllAsync(b => b.BlogObjectId == id, b => b.Blog);
+
             if (blog == null)
                 return NotFound();
 
-            return Ok(blog.ToDto());
+            var blogDto = blog.ToDto();
+            if (blogPosts == null)
+            {
+                blogDto.blogPosts = new List<BlogPostDto>();
+                return Ok(blogDto);
+            }
+            blogDto.blogPosts = blogPosts.ToDtoList();
+            return Ok(blogDto);
         }
 
         // POST: api/blog
@@ -65,7 +75,7 @@ namespace BlogPlatform.API.Controllers
             {
                 var uid = Guid.NewGuid();
                 blog.objectId = uid;
-                blog.href = $"/blog/{uid}";
+                blog.href = $"/blog?blogid={uid}";
             }
             blog.createdAt = DateTime.UtcNow;
 

@@ -16,8 +16,8 @@ namespace BlogPlatform.Application.Extentions
                 title = blogPost.Title,
                 content = blogPost.Content,
                 authorsInfo = blogPost.AuthorsInfo?.ToDto(),
-                authorsObjectId= blogPost.AuthorsInfo?.ObjectId??blogPost.AuthorsInfoObjectId, 
-                description= blogPost.Description??"",
+                authorsObjectId = blogPost.AuthorsInfo?.ObjectId ?? blogPost.AuthorsInfoObjectId,
+                description = blogPost.Description ?? "",
                 date = blogPost.Date, // Format date as needed
                 blog = blogPost.Blog?.ToDto(),
                 category = blogPost.Category,
@@ -25,7 +25,8 @@ namespace BlogPlatform.Application.Extentions
                 href = blogPost.Href,
                 blogObjectId = blogPost.BlogObjectId,
                 createdAt = (DateTime)blogPost.CreatedAt,
-                updatedAt = blogPost.UpdatedAt
+                updatedAt = blogPost.UpdatedAt,
+                
                 // Add other properties as needed
             };
         }
@@ -47,12 +48,12 @@ namespace BlogPlatform.Application.Extentions
                 Href = blogDto.href,
                 Category = blogDto.category,
                 Content = blogDto.content,
-                Date =(DateTime) blogDto.date,
+                Date =  blogDto.date,
             };
         }
         public static List<BlogPostDto> ToDtoList(this IEnumerable<BlogPost> blogPost)
         {
-            if (blogPost == null) return null;
+            if (blogPost == null) return new List<BlogPostDto>();
             return blogPost.Select(a => a.ToDto()).ToList();
         }
 
