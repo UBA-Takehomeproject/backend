@@ -12,14 +12,15 @@ namespace BlogPlatform.Application.Extensions
 
             return new BlogDto
             {
-                objectId = (Guid)blog.ObjectId,
+                objectId = blog.ObjectId,
                 title = blog.Title,
 
                 authorsInfo = blog.AuthorsInfo?.ToDto(),
                 authorsObjectId=blog.AuthorsInfo.ObjectId,
                 createdAt = (DateTime)blog.CreatedAt,
-                updatedAt = (DateTime)blog.UpdatedAt,
-                description = blog.Description,
+                updatedAt = blog.UpdatedAt,
+                description = blog.Description??"",
+                
                 date = blog.Date,
                 coverImage = blog.CoverImage,
                 href = blog.Href

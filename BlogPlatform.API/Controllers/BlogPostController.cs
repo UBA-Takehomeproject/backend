@@ -48,6 +48,21 @@ namespace BlogPlatform.API.Controllers
 
             return Ok(post.ToDtoList());
         }
+         // GET: api/blogpost/by/{authorId}
+        [HttpGet("by/{authorId}")]
+        public async Task<IActionResult> GetBlogPostByAuthorId(Guid authorId)
+        {
+            var blogposts = await _unitOfWork.BlogPosts.GetAllAsync(
+            b => b.AuthorsInfo.ObjectId == authorId,
+            b => b.AuthorsInfo,
+            b => b.Blog
+            );
+
+            if (blogposts == null || !blogposts.Any())
+                return NotFound();
+
+            return Ok(blogposts.ToDtoList());
+        }
 
         // POST: api/blogpost
         [HttpPost]
@@ -61,7 +76,7 @@ namespace BlogPlatform.API.Controllers
             {
                 var uid = Guid.NewGuid();
                 post.objectId = uid;
-                post.href = $"/blog-post/{uid}";
+                post.href = $"/blog-post?postid={uid}";
             }
             post.createdAt = DateTime.UtcNow;
             await _unitOfWork.BlogPosts.AddAsync(post.ToEntity());

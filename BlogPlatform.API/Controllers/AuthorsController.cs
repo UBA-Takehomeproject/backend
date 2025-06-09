@@ -41,8 +41,7 @@ namespace BlogPlatform.API.Controllers
         {
 
             // var user = await _unitOfWork.Users.GetByIdAsync(request.objectId.ToString());
-            if (request.objectId == Guid.Empty)
-                request.objectId = Guid.NewGuid();
+           
 
             var entity = request.ToEntity();
             await _unitOfWork.Authors.AddAsync(entity);
