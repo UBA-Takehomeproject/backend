@@ -77,7 +77,9 @@ namespace BlogPlatform.Infrastructure.Repositories
             {
                 query = query.Include(include);
             }
-            return await query.FirstOrDefaultAsync();
+
+           
+            return await query.Where(e => EF.Property<Guid>(e, "ObjectId") == id).FirstOrDefaultAsync();
         }
 
         public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes)
