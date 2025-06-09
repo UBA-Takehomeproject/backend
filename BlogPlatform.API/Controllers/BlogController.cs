@@ -62,7 +62,12 @@ namespace BlogPlatform.API.Controllers
                 return BadRequest(ModelState);
 
             if (blog.objectId == Guid.Empty)
-                blog.objectId = Guid.NewGuid();
+            {
+                var uid = Guid.NewGuid();
+                blog.objectId = uid;
+                blog.href = $"/blog/{uid}";
+            }
+            blog.createdAt = DateTime.UtcNow;
 
             await _unitOfWork.Blogs.AddAsync(blog.ToEntity());
             await _unitOfWork.SaveChangesAsync();
@@ -85,6 +90,7 @@ namespace BlogPlatform.API.Controllers
             // Update fields
             existing.Title = blog.title;
             existing.Href = blog.href;
+            existing.UpdatedAt = DateTime.UtcNow;
 
             _unitOfWork.Blogs.Update(existing);
             await _unitOfWork.SaveChangesAsync();

@@ -12,19 +12,20 @@ namespace BlogPlatform.Application.Extentions
 
             return new BlogPostDto
             {
-                objectId = (Guid)blogPost.ObjectId,
+                objectId = blogPost.ObjectId,
                 title = blogPost.Title,
                 content = blogPost.Content,
                 authorsInfo = blogPost.AuthorsInfo?.ToDto(),
-                authorsObjectId= blogPost.AuthorsInfo.ObjectId, 
-                description= blogPost.Description,
+                authorsObjectId= blogPost.AuthorsInfo?.ObjectId??blogPost.AuthorsInfoObjectId, 
+                description= blogPost.Description??"",
                 date = blogPost.Date, // Format date as needed
                 blog = blogPost.Blog?.ToDto(),
                 category = blogPost.Category,
                 coverImage = blogPost.CoverImage,
                 href = blogPost.Href,
+                blogObjectId = blogPost.BlogObjectId,
                 createdAt = (DateTime)blogPost.CreatedAt,
-                updatedAt = (DateTime)blogPost.UpdatedAt
+                updatedAt = blogPost.UpdatedAt
                 // Add other properties as needed
             };
         }

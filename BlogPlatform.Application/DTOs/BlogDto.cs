@@ -13,9 +13,9 @@ namespace BlogPlatform.Application.DTOs
 
         public Guid authorsObjectId { get; set; }
         public string coverImage { get; set; }
-        public string href { get; set; }
+        public string? href { get; set; }
         public DateTime createdAt { get; set; }
-        public DateTime updatedAt { get; set; }
+        public DateTime? updatedAt { get; set; }
     }
 
 

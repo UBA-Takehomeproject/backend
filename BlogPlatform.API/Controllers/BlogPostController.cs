@@ -58,7 +58,12 @@ namespace BlogPlatform.API.Controllers
                 return BadRequest(ModelState);
 
             if (post.objectId == Guid.Empty)
-                post.objectId = Guid.NewGuid();
+            {
+                var uid = Guid.NewGuid();
+                post.objectId = uid;
+                post.href = $"/blog-post/{uid}";
+            }
+            post.createdAt = DateTime.UtcNow;
             await _unitOfWork.BlogPosts.AddAsync(post.ToEntity());
             await _unitOfWork.SaveChangesAsync();
 
@@ -78,6 +83,7 @@ namespace BlogPlatform.API.Controllers
                 return NotFound();
 
             existing.Title = post.title;
+            existing.UpdatedAt = DateTime.UtcNow;
             existing.Content = post.content;
             existing.CreatedAt = post.createdAt;
             existing.ObjectId = post.objectId;

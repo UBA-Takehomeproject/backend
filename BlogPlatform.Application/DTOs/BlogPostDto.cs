@@ -13,11 +13,11 @@ namespace BlogPlatform.Application.DTOs
         public AuthorDto? authorsInfo { get; set; }
         public Guid authorsObjectId { get; set; }
         public string coverImage { get; set; }
-        public string href { get; set; }
+        public string? href { get; set; }
         public BlogDto? blog { get; set; }
         public Guid blogObjectId { get; set; }
         public DateTime createdAt { get; set; }
-        public DateTime updatedAt { get; set; }
+        public DateTime? updatedAt { get; set; }
     }
 
 }

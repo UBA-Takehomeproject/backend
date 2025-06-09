@@ -22,7 +22,7 @@ namespace BlogPlatform.Domain.Entities
         // Foreign key to Author
         public Guid BlogObjectId { get; set; }
 
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         // [ForeignKey("BlogObjectId")]
         public Blog Blog { get; set; }

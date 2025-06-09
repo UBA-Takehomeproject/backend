@@ -15,7 +15,7 @@ namespace BlogPlatform.Domain.Entities
         public Guid AuthorsInfoObjectId { get; set; }
 
         public Author? AuthorsInfo { get; set; }
-        public string Description { get; set; }
+        public string? Description { get; set; }
 
         public string CoverImage { get; set; }
         public string Href { get; set; }
